@@ -18,10 +18,12 @@ function Lobbypage(props) {
         socket.emit("room:join", { email, room })
     }, [socket, email, room])
 
-    const handlerRoomJoin = (data) => {
-        const { email, room } = data
+    const handlerRoomJoin = useCallback((data) => {
+        const { room } = data
         navigate(`/room/${room}`)
-    }
+    },[navigate])
+
+    let toggelCopy
 
     useEffect(() => {
         setuniqueID(uuidV1())
@@ -34,9 +36,8 @@ function Lobbypage(props) {
             socket.off("room:join")
             clearTimeout(toggelCopy)
         }
-    },[])
+    },[handlerRoomJoin, socket, toggelCopy, uniqueID ])
 
-    let toggelCopy
     const copyHandler = () =>{
         navigator.clipboard.writeText(uniqueID)
         setRoom(uniqueID)
